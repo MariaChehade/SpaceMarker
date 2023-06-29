@@ -2,7 +2,7 @@ import pygame
 from tkinter import simpledialog 
 import csv
 import time
-from funcoes import salvar, carregar, excluir
+from funcoes import salvar, excluir
 pygame.init()
 
 #cores:
@@ -58,11 +58,22 @@ while running:
                 coordenadas.append(pos)
                 texto.append(item)
 
+                
         if event.type==pygame.KEYUP:
             if event.key== pygame.K_F9:
                 salvar()
             elif event.key==pygame.K_F10:
-                carregar()
+                try:
+                    with open("marcacoes.csv", "r", newline="") as arquivo:
+                        leitor = csv.reader(arquivo)
+                        for linha in leitor:
+                            nome=linha[0]
+                            x=int(linha[1])
+                            y=int(linha[2])
+                            coordenadas.append((x, y))
+                            texto.append(item)
+                except FileNotFoundError:
+                    pass
             elif event.key==pygame.K_F11:
                 excluir()
             elif event.key==pygame.K_F12:
@@ -75,6 +86,7 @@ while running:
         pygame.draw.circle(display, branco, item, raio)
         display.blit(textoCoordenada, item)
     pygame.display.flip()
+
 pygame.quit()
 
 
